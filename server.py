@@ -5,16 +5,18 @@ app = Flask('server')
 CORS(app)
 app.config['SECRET_KEY'] = '199624f47e49f3fb1e3f66484f4f7814'
 
+
 @app.route('/')
 @app.route('/home')
 def home():
     return "Server Home"
 
+
 '''
 # Rooms Part
 '''
 
-rooms = [{'id':i} for i in range(10)]
+rooms = [{'id': i} for i in range(10)]
 
 # 一个预入住的顾客，以便直接登录
 rooms[3] = {
@@ -29,9 +31,11 @@ rooms[3] = {
     'power': False,
 }
 
+
 @app.route('/rooms/')
 def rooms_page():
     return jsonify(rooms)
+
 
 @app.route('/rooms/checkIn', methods=['POST'])
 def checkIn():
@@ -42,7 +46,7 @@ def checkIn():
     rooms[id]['checkInDate'] = 'nowDate() in python'
     rooms[id]['cost'] = 0
     rooms[id]['expectTemp'] = 25
-    rooms[id]['speed'] = 0
+    rooms[id]['speed'] = 'Mid'
     rooms[id]['temp'] = 'Server says it is 23'
     rooms[id]['power'] = False
     rooms[id]['_showDetails'] = False
@@ -71,6 +75,7 @@ def checkOut():
 
 admins = []
 
+
 @app.route('/auth/register', methods=['POST'])
 def register():
     req = request.get_json(force=True)
@@ -86,7 +91,7 @@ def loginAdmin():
     req = request.get_json(force=True)
     for admin in admins:
         if admin['email'] == req['email']:
-            return jsonify({'error': admin['pwd']!=req['pwd']})
+            return jsonify({'error': admin['pwd'] != req['pwd']})
     return jsonify({'error': True})
 
 
@@ -94,12 +99,11 @@ def loginAdmin():
 def login():
     req = request.get_json(force=True)
     print(req)
-    if int(req['roomId']) < 0 or int(req['roomId'])>=len(rooms):
+    if int(req['roomId']) < 0 or int(req['roomId']) >= len(rooms):
         return jsonify({'error': True})
     if 'idCard' not in rooms[int(req['roomId'])].keys():
         return jsonify({'error': True})
-    return jsonify({'error': req['idCard']!= rooms[int(req['roomId'])]['idCard']})
-
+    return jsonify({'error': req['idCard'] != rooms[int(req['roomId'])]['idCard']})
 
 
 '''
@@ -112,6 +116,7 @@ center = {
     'mode': 'Cold',
     'temp': 25,
 }
+
 
 @app.route('/center/')
 def center_page():
