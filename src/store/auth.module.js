@@ -4,21 +4,21 @@ const axios = require('axios');
 
 export default {
     state: {
-        roomId:'',
-        login_roomId:'',
-        idCard:'',
+        roomId: '',
+        login_roomId: '',
+        idCard: '',
         adminEmail: '',
         login_adminEmail: '',
         password: '',
-        loading:false,
-        error:'',
+        loading: false,
+        error: '',
     },
 
     getter: {
-        adminHaveLogin(state){
-            return state.adminEmail!=null;
+        adminHaveLogin(state) {
+            return state.adminEmail != null;
         },
-        haveLogin(state){
+        haveLogin(state) {
             return state.roomId != null;
         }
     },
@@ -33,7 +33,7 @@ export default {
         set_idCard(state, idCard) {
             state.idCard = idCard;
         },
-        set_adminEmail(state, adminEmail){
+        set_adminEmail(state, adminEmail) {
             state.adminEmail = adminEmail;
         },
         set_login_adminEmail(state, adminEmail) {
@@ -56,16 +56,17 @@ export default {
     actions: {
         register({ commit, state }) {
             commit('set_loading', true);
-            return axios.post(api + 'register', { email: state.adminEmail, pwd: state.password})
+            return axios.post(api + 'register', { email: state.adminEmail, pwd: state.password })
                 .then((rep) => {
-                    if(rep.data.error==true){
+                    if (rep.data.error == true) {
                         commit('set_loading', false)
                         commit('set_error', "Register Failed: This email has been registered!")
                     }
-                    else{
-                        commit('set_login_adminEmail', state.adminEmail)
+                    else {
                         commit('set_loading', false)
                         commit('set_error', "")
+                        commit('set_login_adminEmail', state.adminEmail)
+
                     }
                 })
                 .catch((error) => {
@@ -92,9 +93,9 @@ export default {
         },
         login({ commit, state }) {
             commit('set_loading', true);
-            return axios.post(api + 'login', { roomId: state.roomId, idCard:state.idCard})
+            return axios.post(api + 'login', { roomId: state.roomId, idCard: state.idCard })
                 .then((rep) => {
-                    if (rep.data.error == true){
+                    if (rep.data.error == true) {
                         commit('set_loading', false)
                         commit('set_error', "This room does't in range or id card number wrong!")
                     }

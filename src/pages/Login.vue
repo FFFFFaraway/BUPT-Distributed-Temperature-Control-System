@@ -1,17 +1,13 @@
 <template>
   <div>
-    <v-nav/>
+    <v-nav />
     <div class="container">
       <h1>Sign In</h1>
       <div>
         <b-tabs content-class="mt-3">
           <b-tab title="Customer" active>
-            <b-form @submit="login" @reset="onReset">
-              <b-form-group
-                id="input-group-1"
-                label="Room number:"
-                label-for="input-1"
-              >
+            <b-form>
+              <b-form-group id="input-group-1" label="Room number:" label-for="input-1">
                 <b-form-input
                   id="input-1"
                   v-model="roomId"
@@ -30,23 +26,18 @@
                   placeholder="Enter ID card number"
                 ></b-form-input>
               </b-form-group>
-              
+
               <b-alert :show="error!=''" variant="danger">{{ error }}</b-alert>
 
               <b-button-group>
-              <b-button type="submit" variant="primary">Submit</b-button>
-              <b-button type="reset" variant="danger">Reset</b-button>
+                <b-button @click="login" variant="primary">Submit</b-button>
+                <b-button @click="onReset" variant="danger">Reset</b-button>
               </b-button-group>
-              
             </b-form>
           </b-tab>
           <b-tab title="Admin">
-            <b-form @submit="loginAdmin" @reset="onReset">
-              <b-form-group
-                id="input-group-3"
-                label="Email address:"
-                label-for="input-3"
-              >
+            <b-form>
+              <b-form-group id="input-group-3" label="Email address:" label-for="input-3">
                 <b-form-input
                   id="input-3"
                   v-model="adminEmail"
@@ -69,10 +60,9 @@
               <b-alert :show="error!=''" variant="danger">{{ error }}</b-alert>
 
               <b-button-group>
-              <b-button type="submit" variant="primary">Submit</b-button>
-              <b-button type="reset" variant="danger">Reset</b-button>
+                <b-button @click="loginAdmin" variant="primary">Submit</b-button>
+                <b-button @click="onReset" variant="danger">Reset</b-button>
               </b-button-group>
-              
             </b-form>
           </b-tab>
         </b-tabs>
@@ -82,64 +72,72 @@
 </template>
 
 <script>
-import VNav from '../components/VNav.vue'
-import { mapState, mapActions } from 'vuex';
+import VNav from "../components/VNav.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
-  components:{
-    VNav,
+  components: {
+    VNav
   },
-  computed:{
-    ...mapState('auth',['roomId','idCard','adminEmail','password','login_roomId','login_adminEmail','error']),
-    adminEmail:{
-      get(){
+  computed: {
+    ...mapState("auth", [
+      "roomId",
+      "idCard",
+      "adminEmail",
+      "password",
+      "login_roomId",
+      "login_adminEmail",
+      "error"
+    ]),
+    adminEmail: {
+      get() {
         return this.$store.adminEmail;
       },
-      set(value){
-        this.$store.commit('auth/set_adminEmail',value);
+      set(value) {
+        this.$store.commit("auth/set_adminEmail", value);
       }
     },
-    password:{
-      get(){
+    password: {
+      get() {
         return this.$store.password;
       },
-      set(value){
-        this.$store.commit('auth/set_password',value);
+      set(value) {
+        this.$store.commit("auth/set_password", value);
       }
     },
-    roomId:{
-      get(){
+    roomId: {
+      get() {
         return this.$store.roomId;
       },
-      set(value){
-        this.$store.commit('auth/set_roomId',value);
+      set(value) {
+        this.$store.commit("auth/set_roomId", value);
       }
     },
-    idCard:{
-      get(){
+    idCard: {
+      get() {
         return this.$store.idCard;
       },
-      set(value){
-        this.$store.commit('auth/set_idCard',value);
+      set(value) {
+        this.$store.commit("auth/set_idCard", value);
       }
-    },
-  },
-  watch:{
-    login_roomId:function(){
-      this.$router.push('/Home');
-    },
-    login_adminEmail:function(){
-      this.$router.push('/Home');
-    },
-  },
-  methods: {
-    ...mapActions('auth', ['loginAdmin','login']),
-    onReset() {
-      this.$store.commit('auth/set_error','');
     }
   },
-  created(){
+  watch: {
+    login_roomId: function() {
+      this.$router.push("/Home");
+    },
+    login_adminEmail: function() {
+      this.$router.push("/Home");
+    }
+  },
+  methods: {
+    ...mapActions("auth", ["loginAdmin", "login"]),
+    onReset() {
+      this.$store.commit("auth/set_error", "");
+    }
+  },
+  created() {
     this.onReset();
   }
-}
+};
 </script>
