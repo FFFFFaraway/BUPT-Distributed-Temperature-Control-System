@@ -43,9 +43,15 @@
                   ></b-form-input>
                 </b-form-group>
 
+                <v-slave :roomId="details.item.id" />
+
                 <b-button-group>
-                  <b-button @click="checkIn(details.item.id)" variant="primary">Check In</b-button>
-                  <b-button @click="checkOut(details.item.id)" variant="danger">Check Out</b-button>
+                  <b-button
+                    v-if="!details.item.haveCheckIn"
+                    @click="checkIn(details.item.id)"
+                    variant="primary"
+                  >Check In</b-button>
+                  <b-button v-else @click="checkOut(details.item.id)" variant="danger">Check Out</b-button>
                 </b-button-group>
               </b-form>
             </template>
@@ -60,6 +66,7 @@
 import VNav from "../components/VNav.vue";
 import VCenter from "../components/VCenter.vue";
 import Vuex from "vuex";
+import VSlave from "../components/VSlave.vue";
 
 const mapState = Vuex.mapState;
 const mapActions = Vuex.mapActions;
@@ -90,7 +97,8 @@ export default {
   },
   components: {
     VCenter,
-    VNav
+    VNav,
+    VSlave
   },
   created() {
     this.getRooms();

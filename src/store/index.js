@@ -4,7 +4,6 @@ import Vuex from "vuex";
 import rooms from "./rooms.module";
 import center from "./center.module";
 import auth from './auth.module';
-import slave from './slave.module'
 
 Vue.use(Vuex);
 
@@ -13,6 +12,5 @@ export default new Vuex.Store({
         rooms,
         center,
         auth,
-        slave,
     }
 });

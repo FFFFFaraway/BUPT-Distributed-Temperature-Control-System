@@ -16,11 +16,24 @@ def home():
 # Rooms Part
 '''
 
-rooms = [{'id': i} for i in range(10)]
+rooms = [{
+    'id': i,
+    'haveCheckIn': False,
+    'name': '',
+    'idCard': '',
+    'checkInDate': '',
+    'cost': 0,
+    'expectTemp': 25,
+    'speed': 'Low',
+    'temp': 'Server says it is 23',
+    'power': False,
+    '_showDetails': False,
+} for i in range(10)]
 
 # 一个预入住的顾客，以便直接登录
 rooms[3] = {
     'id': 3,
+    'haveCheckIn': True,
     'name': 'Jon Snow',
     'idCard': '8',
     'checkInDate': '2000-01-01',
@@ -43,13 +56,9 @@ def checkIn():
     print(room)
     id = room['id']
     rooms[id] = room
+    rooms[id]['haveCheckIn'] = True
     rooms[id]['checkInDate'] = 'nowDate() in python'
     rooms[id]['cost'] = 0
-    rooms[id]['expectTemp'] = 25
-    rooms[id]['speed'] = 'Mid'
-    rooms[id]['temp'] = 'Server says it is 23'
-    rooms[id]['power'] = False
-    rooms[id]['_showDetails'] = False
     return rooms[id]
 
 
@@ -59,13 +68,14 @@ def checkOut():
     id = room['id']
     rooms[id]['name'] = ''
     rooms[id]['idCard'] = ''
+    rooms[id]['haveCheckIn'] = False
     rooms[id]['checkInDate'] = ''
-    rooms[id]['cost'] = ''
-    rooms[id]['expectTemp'] = ''
-    rooms[id]['speed'] = ''
-    rooms[id]['temp'] = ''
+    rooms[id]['cost'] = 0
+    rooms[id]['expectTemp'] = 25
+    rooms[id]['speed'] = 'Low'
+    rooms[id]['temp'] = 'Server says it is 23'
     rooms[id]['power'] = False
-    rooms[id]['_showDetails'] = False
+    rooms[id]['_showDetails'] = True
     return rooms[id]
 
 
@@ -152,27 +162,32 @@ def temp_add():
 '''
 
 
-@app.route('/slave/flipPower', methods=['POST'])
+@app.route('/rooms/flipPower', methods=['POST'])
 def slave_flipPower():
     req = request.get_json(force=True)
     id = int(req['id'])
     rooms[id]['power'] = not rooms[id]['power']
+    rooms[id]['_showDetails'] = True
     return jsonify(rooms[id])
 
 
-@app.route('/slave/temp_add', methods=['POST'])
+@app.route('/rooms/temp_add', methods=['POST'])
 def slave_temp_add():
+    print(request)
     req = request.get_json(force=True)
+    print(req)
     id = int(req['id'])
     rooms[id]['expectTemp'] += int(req['offset'])
+    rooms[id]['_showDetails'] = True
     return jsonify(rooms[id])
 
 
-@app.route('/slave/set_speed', methods=['POST'])
+@app.route('/rooms/set_speed', methods=['POST'])
 def slave_set_speed():
     req = request.get_json(force=True)
     id = int(req['id'])
     rooms[id]['speed'] = req['speed']
+    rooms[id]['_showDetails'] = True
     return jsonify(rooms[id])
 
 
