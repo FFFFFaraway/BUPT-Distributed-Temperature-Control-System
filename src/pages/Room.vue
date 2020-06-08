@@ -2,7 +2,7 @@
   <div>
     <v-nav />
     <br />
-    <div v-if="login_roomId==''" class="container">
+    <div v-if="login_roomId==''||this.rooms.data[ this.roomId].idCard==''" class="container">
       <h1>Room</h1>
       <p>Please sign in for more information</p>
     </div>
