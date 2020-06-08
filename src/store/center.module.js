@@ -8,65 +8,29 @@ export default {
         state: 'Standby',
         mode: 'Cold',
         temp: 25,
-        loading: false,
     },
 
     mutations: {
-        set_center(state, center){
-            state.power = center.data.power;
-            state.state = center.data.state;
-            state.mode = center.data.mode;
-            state.temp = center.data.temp;
-        },
-        set_loading(state, loading) {
-            state.loading = loading;
+        set_center(state, center) {
+            state.power = center.power;
+            state.state = center.state;
+            state.mode = center.mode;
+            state.temp = center.temp;
         },
     },
 
     actions: {
-        getCenter({ commit }) {
-            commit('set_loading', true);
-            return axios.get(api)
-                .then((center) => {
-                    commit('set_center', center)
-                    commit('set_loading', false)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
+        socket_getCenter({ commit }, center) {
+            commit('set_center', center)
         },
-        flipPower({ commit }) {
-            commit('set_loading', true);
+        flipPower() {
             return axios.post(api + 'flipPower')
-                .then((center) => {
-                    commit('set_center', center)
-                    commit('set_loading', false)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
         },
-        setMode({ commit }, mode) {
-            commit('set_loading', true);
-            return axios.post(api + 'setMode', {mode:mode})
-                .then((center) => {
-                    commit('set_center', center)
-                    commit('set_loading', false)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
+        setMode(_, mode) {
+            return axios.post(api + 'setMode', { mode: mode })
         },
-        temp_add({ commit }, offset) {
-            commit('set_loading', true);
-            return axios.post(api + 'temp_add', {offset:offset})
-                .then((center) => {
-                    commit('set_center', center)
-                    commit('set_loading', false)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
+        temp_add(_, offset) {
+            return axios.post(api + 'temp_add', { offset: offset })
         },
     },
     namespaced: true,

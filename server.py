@@ -1,9 +1,26 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flask_socketio import SocketIO, send, emit
 
 app = Flask('server')
 CORS(app)
 app.config['SECRET_KEY'] = '199624f47e49f3fb1e3f66484f4f7814'
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+
+@socketio.on('connect')
+def handle_connect():
+    print('received connection!')
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected!')
+
+
+@socketio.on('message')
+def handle_message(message):
+    print("receive: " + message)
 
 
 @app.route('/')
@@ -45,9 +62,9 @@ rooms[3] = {
 }
 
 
-@app.route('/rooms/')
-def rooms_page():
-    return jsonify(rooms)
+@socketio.on('update_rooms')
+def handle_update_rooms():
+    emit("getRooms", rooms, broadcast=True)
 
 
 @app.route('/rooms/checkIn', methods=['POST'])
@@ -59,6 +76,8 @@ def checkIn():
     rooms[id]['haveCheckIn'] = True
     rooms[id]['checkInDate'] = 'nowDate() in python'
     rooms[id]['cost'] = 0
+    socketio.emit("getRooms", rooms, broadcast=True)
+    print(rooms[id])
     return rooms[id]
 
 
@@ -76,6 +95,7 @@ def checkOut():
     rooms[id]['temp'] = 'Server says it is 23'
     rooms[id]['power'] = False
     rooms[id]['_showDetails'] = True
+    socketio.emit("getRooms", rooms, broadcast=True)
     return rooms[id]
 
 
@@ -128,15 +148,15 @@ center = {
 }
 
 
-@app.route('/center/')
-def center_page():
-    print(center)
-    return jsonify(center)
+@socketio.on('update_center')
+def handle_update_center():
+    emit("getCenter", center, broadcast=True)
 
 
 @app.route('/center/flipPower', methods=['POST'])
 def flipPower():
     center['power'] = not center['power']
+    socketio.emit("getCenter", center, broadcast=True)
     return center
 
 
@@ -146,6 +166,7 @@ def setMode():
     print(req)
     center['mode'] = req['mode']
     center['temp'] = 25
+    socketio.emit("getCenter", center, broadcast=True)
     return center
 
 
@@ -154,6 +175,7 @@ def temp_add():
     req = request.get_json(force=True)
     print(req)
     center['temp'] += req['offset']
+    socketio.emit("getCenter", center, broadcast=True)
     return center
 
 
@@ -168,6 +190,7 @@ def slave_flipPower():
     id = int(req['id'])
     rooms[id]['power'] = not rooms[id]['power']
     rooms[id]['_showDetails'] = True
+    socketio.emit("getRooms", rooms, broadcast=True)
     return jsonify(rooms[id])
 
 
@@ -179,6 +202,7 @@ def slave_temp_add():
     id = int(req['id'])
     rooms[id]['expectTemp'] += int(req['offset'])
     rooms[id]['_showDetails'] = True
+    socketio.emit("getRooms", rooms, broadcast=True)
     return jsonify(rooms[id])
 
 
@@ -188,8 +212,10 @@ def slave_set_speed():
     id = int(req['id'])
     rooms[id]['speed'] = req['speed']
     rooms[id]['_showDetails'] = True
+    socketio.emit("getRooms", rooms, broadcast=True)
     return jsonify(rooms[id])
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+app.debug = True
+if __name__ == '__main__':
+    socketio.run(app)

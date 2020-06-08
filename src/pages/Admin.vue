@@ -9,55 +9,53 @@
       <br />
       <v-center admin="true" />
       <br />
-      <b-overlay :show="loading" rounded="sm">
-        <div class="container">
-          <h1>Rooms:</h1>
-          <b-table :items="rooms.data" :fields="fields" striped responsive="sm">
-            <template v-slot:cell(show_details)="row">
-              <b-button
-                size="sm"
-                @click="row.toggleDetails"
-                class="mr-2"
-              >{{ row.detailsShowing ? 'Hide' : 'Show'}} Details</b-button>
-            </template>
+      <div class="container">
+        <h1>Rooms:</h1>
+        <b-table :items="rooms.data" :fields="fields" striped responsive="sm">
+          <template v-slot:cell(show_details)="row">
+            <b-button
+              size="sm"
+              @click="row.toggleDetails"
+              class="mr-2"
+            >{{ row.detailsShowing ? 'Hide' : 'Show'}} Details</b-button>
+          </template>
 
-            <template v-slot:row-details="details">
-              <b-form>
-                <b-form-group id="input-group-1" label="ID card number:" label-for="input-1">
-                  <b-form-input
-                    id="input-1"
-                    v-model="details.item.idCard"
-                    type="number"
-                    required
-                    placeholder="Enter ID card number"
-                  ></b-form-input>
-                </b-form-group>
+          <template v-slot:row-details="details">
+            <b-form>
+              <b-form-group id="input-group-1" label="ID card number:" label-for="input-1">
+                <b-form-input
+                  id="input-1"
+                  v-model="details.item.idCard"
+                  type="number"
+                  required
+                  placeholder="Enter ID card number"
+                ></b-form-input>
+              </b-form-group>
 
-                <b-form-group id="input-group-2" label="Name:" label-for="input-2">
-                  <b-form-input
-                    id="input-1"
-                    v-model="details.item.name"
-                    type="text"
-                    required
-                    placeholder="Enter name"
-                  ></b-form-input>
-                </b-form-group>
+              <b-form-group id="input-group-2" label="Name:" label-for="input-2">
+                <b-form-input
+                  id="input-1"
+                  v-model="details.item.name"
+                  type="text"
+                  required
+                  placeholder="Enter name"
+                ></b-form-input>
+              </b-form-group>
 
-                <v-slave :roomId="details.item.id" />
+              <v-slave :roomId="details.item.id" />
 
-                <b-button-group>
-                  <b-button
-                    v-if="!details.item.haveCheckIn"
-                    @click="checkIn(details.item.id)"
-                    variant="primary"
-                  >Check In</b-button>
-                  <b-button v-else @click="checkOut(details.item.id)" variant="danger">Check Out</b-button>
-                </b-button-group>
-              </b-form>
-            </template>
-          </b-table>
-        </div>
-      </b-overlay>
+              <b-button-group>
+                <b-button
+                  v-if="!details.item.haveCheckIn"
+                  @click="checkIn(details.item)"
+                  variant="primary"
+                >Check In</b-button>
+                <b-button v-else @click="checkOut(details.item)" variant="danger">Check Out</b-button>
+              </b-button-group>
+            </b-form>
+          </template>
+        </b-table>
+      </div>
     </div>
   </div>
 </template>
@@ -90,10 +88,10 @@ export default {
   },
   computed: {
     ...mapState("auth", ["login_adminEmail"]),
-    ...mapState("rooms", ["rooms", "loading"])
+    ...mapState("rooms", ["rooms"])
   },
   methods: {
-    ...mapActions("rooms", ["getRooms", "checkIn", "checkOut"])
+    ...mapActions("rooms", ["checkIn", "checkOut"])
   },
   components: {
     VCenter,
@@ -101,7 +99,7 @@ export default {
     VSlave
   },
   created() {
-    this.getRooms();
+    this.$socket.client.emit("update_rooms");
   }
 };
 </script>
