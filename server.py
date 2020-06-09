@@ -216,6 +216,24 @@ def slave_set_speed():
     return jsonify(rooms[id])
 
 
+'''
+# Form Part
+'''
+
+
+@app.route('/form/roomList')
+def get_room_list():
+    ret = [302, 305, 307]
+    return jsonify(ret)
+
+
+@app.route('/form/rep', methods=['POST'])
+def get_form():
+    print(request.get_json())
+    ret = [{"id": 302, "type": 1, "cost": 5}]
+    return jsonify(ret)
+
+
 app.debug = True
 if __name__ == '__main__':
     socketio.run(app)

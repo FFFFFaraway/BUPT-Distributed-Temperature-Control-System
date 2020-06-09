@@ -7,11 +7,12 @@ import About from './pages/About.vue'
 import Admin from './pages/Admin.vue'
 import Room from './pages/Room.vue'
 import Profile from './pages/Profile.vue'
+import Form from './pages/Form.vue'
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
-    routes:[
+    routes: [
         { path: '/', component: Home },
         { path: '/home', name: 'home', component: Home },
         { path: '/about', name: 'about', component: About },
@@ -20,5 +21,6 @@ export default new VueRouter({
         { path: '/admin', name: 'admin', component: Admin },
         { path: '/room', name: 'room', component: Room },
         { path: '/profile', name: 'profile', component: Profile },
+        { path: '/form', name: 'form', component: Form }
     ]
 });
