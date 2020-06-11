@@ -9,7 +9,7 @@
       <br />
       <v-center admin="true" />
       <br />
-      <div class="container">
+      <div class="container" v-if="power">
         <h1>Rooms:</h1>
         <b-table :items="rooms.data" :fields="fields" striped responsive="sm">
           <template v-slot:cell(show_details)="row">
@@ -42,7 +42,7 @@
                 ></b-form-input>
               </b-form-group>
 
-              <v-slave :roomId="details.item.id" />
+              <v-slave :roomId="details.item.id" v-if="details.item.haveCheckIn" />
 
               <b-button-group>
                 <b-button
@@ -88,7 +88,8 @@ export default {
   },
   computed: {
     ...mapState("auth", ["login_adminEmail"]),
-    ...mapState("rooms", ["rooms"])
+    ...mapState("rooms", ["rooms"]),
+    ...mapState("center", ["power"])
   },
   methods: {
     ...mapActions("rooms", ["checkIn", "checkOut"])
