@@ -34,6 +34,9 @@ export default {
         set_speed(_, payload) {
             return axios.post(api + 'set_speed', payload)
         },
+        flipShow(_, roomId) {
+            return axios.post(api + 'flipShow', { id: roomId })
+        }
     },
     namespaced: true,
 };

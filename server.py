@@ -216,6 +216,15 @@ def slave_set_speed():
     return jsonify(rooms[id])
 
 
+@app.route('/rooms/flipShow', methods=['POST'])
+def slave_flipShow():
+    req = request.get_json(force=True)
+    id = int(req['id'])
+    rooms[id]['_showDetails'] = not rooms[id]['_showDetails']
+    socketio.emit("getRooms", rooms, broadcast=True)
+    return jsonify(rooms[id])
+
+
 '''
 # Form Part
 '''

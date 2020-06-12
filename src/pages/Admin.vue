@@ -15,7 +15,7 @@
           <template v-slot:cell(show_details)="row">
             <b-button
               size="sm"
-              @click="row.toggleDetails"
+              @click="flipShow(row.index);row.toggleDetails"
               class="mr-2"
             >{{ row.detailsShowing ? 'Hide' : 'Show'}} Details</b-button>
           </template>
@@ -92,7 +92,7 @@ export default {
     ...mapState("center", ["power"])
   },
   methods: {
-    ...mapActions("rooms", ["checkIn", "checkOut"])
+    ...mapActions("rooms", ["checkIn", "checkOut", "flipShow"])
   },
   components: {
     VCenter,
