@@ -225,6 +225,13 @@ def slave_flipShow():
     return jsonify(rooms[id])
 
 
+@app.route('/rooms/updateRooms', methods=['POST'])
+def slave_updateRooms():
+    req = request.get_json(force=True)
+    rooms = req
+    return jsonify(rooms)
+
+
 '''
 # Form Part
 '''

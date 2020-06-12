@@ -92,7 +92,15 @@ export default {
     ...mapState("center", ["power"])
   },
   methods: {
-    ...mapActions("rooms", ["checkIn", "checkOut", "flipShow"])
+    ...mapActions("rooms", ["checkIn", "checkOut", "flipShow", "updateRooms"])
+  },
+  watch: {
+    rooms: {
+      handler: function(to) {
+        this.updateRooms(to.data);
+      },
+      deep: true
+    }
   },
   components: {
     VCenter,

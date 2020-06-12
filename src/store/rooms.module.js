@@ -36,6 +36,9 @@ export default {
         },
         flipShow(_, roomId) {
             return axios.post(api + 'flipShow', { id: roomId })
+        },
+        updateRooms(_, rooms) {
+            return axios.post(api + 'updateRooms', rooms)
         }
     },
     namespaced: true,
