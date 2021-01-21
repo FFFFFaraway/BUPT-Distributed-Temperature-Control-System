@@ -13,7 +13,7 @@
     "bootstrap-vue": "^2.14.0",
     "core-js": "^3.6.4",
     "popper.js": "^1.16.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "socket.io-client": "^2.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
